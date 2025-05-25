@@ -26,6 +26,7 @@ defineEmits(['select'])
 
 <style scoped>
 .difficulty-btn {
+  width: 9rem;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   border: 2px solid var(--difficulty-color);

@@ -121,6 +121,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
+  gap: 1rem;
 }
 
 .btn {
@@ -148,6 +149,12 @@ h1 {
 
 .btn.secondary:hover {
   background-color: #bdc3c7;
+}
+
+@media (max-width: 450px) {
+  .btn {
+    padding: 0.6rem 0.9rem;
+  }
 }
 
 @media (max-width: 768px) {
