@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../pages/Home.vue'
-import EquationsView from '../pages/Equations.vue'
+import LimitsView from '../pages/Limits.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,8 +10,8 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/equations',
-      component: EquationsView,
+      path: '/limits',
+      component: LimitsView,
     },
   ],
 })

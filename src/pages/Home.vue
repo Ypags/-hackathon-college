@@ -2,11 +2,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import SubjectCard from '../components/ui/SubjectCard.vue'
-import DifficultyButton from '../components/ui/DifficultyButton.vue'
+import TopicButton from '../components/ui/TopicButton.vue'
 
 const router = useRouter()
 const activeSubject = ref('math')
-const activeDifficulty = ref('easy')
+const activeTopic = ref('limits')
 
 const subjects = [
   { id: 'math', name: 'Математика', icon: '✏️', active: true },
@@ -15,23 +15,28 @@ const subjects = [
   { id: 'biology', name: 'Биология', icon: '🧬', active: false },
 ]
 
-const difficulties = [
-  { id: 'easy', name: 'Легкий', color: '#2ecc71' },
-  { id: 'medium', name: 'Средний', color: '#f39c12' },
-  { id: 'hard', name: 'Сложный', color: '#e74c3c' },
+const topics = [
+  { id: 'limits', name: 'Пределы', color: '#2ecc71' },
+  { id: 'derivatives', name: 'Производные', color: '#f39c12' },
+  { id: 'integrals', name: 'Интегралы', color: '#e74c3c' },
+  { id: 'matrices', name: 'Матрицы', color: '#9b59b6' },
 ]
 
 const selectSubject = (subjectId) => {
   activeSubject.value = subjectId
 }
 
-const selectDifficulty = (difficultyId) => {
-  activeDifficulty.value = difficultyId
+const selectTopic = (topicId) => {
+  activeTopic.value = topicId
 }
 
 const startLearning = () => {
   if (activeSubject.value === 'math') {
-    router.push('/equations')
+    if (activeTopic.value === 'limits') {
+      router.push('/limits')
+    } else {
+      alert('Эта тема пока находится в разработке!')
+    }
   } else {
     alert('Эта дисциплина пока находится в разработке!')
   }
@@ -42,7 +47,7 @@ const startLearning = () => {
   <div class="home-container">
     <header>
       <h1>Учись с удовольствием</h1>
-      <p>Выбери дисциплину и уровень сложности, чтобы начать</p>
+      <p>Выбери дисциплину и тему, чтобы начать</p>
     </header>
 
     <section class="subject-selection">
@@ -58,15 +63,15 @@ const startLearning = () => {
       </div>
     </section>
 
-    <section class="difficulty-selection">
-      <h2>Выберите уровень сложности</h2>
-      <div class="difficulty-buttons">
-        <DifficultyButton
-          v-for="difficulty in difficulties"
-          :key="difficulty.id"
-          :difficulty="difficulty"
-          :isActive="activeDifficulty === difficulty.id"
-          @select="selectDifficulty"
+    <section class="topic-selection">
+      <h2>Выберите тему</h2>
+      <div class="topic-buttons">
+        <TopicButton
+          v-for="topic in topics"
+          :key="topic.id"
+          :topic="topic"
+          :isActive="activeTopic === topic.id"
+          @select="selectTopic"
         />
       </div>
     </section>
@@ -116,7 +121,7 @@ h2 {
   gap: 1.5rem;
 }
 
-.difficulty-buttons {
+.topic-buttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -159,7 +164,7 @@ h2 {
     grid-template-columns: 1fr;
   }
 
-  .difficulty-buttons {
+  .topic-buttons {
     flex-direction: column;
   }
 }

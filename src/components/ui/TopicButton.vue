@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-  difficulty: {
+  topic: {
     type: Object,
     required: true,
   },
@@ -15,40 +15,40 @@ defineEmits(['select'])
 
 <template>
   <button
-    class="difficulty-btn"
+    class="topic-btn"
     :class="{ active: isActive }"
-    :style="{ '--difficulty-color': difficulty.color }"
-    @click="$emit('select', difficulty.id)"
+    :style="{ '--topic-color': topic.color }"
+    @click="$emit('select', topic.id)"
   >
-    {{ difficulty.name }}
+    {{ topic.name }}
   </button>
 </template>
 
 <style scoped>
-.difficulty-btn {
+.topic-btn {
   width: 9rem;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  border: 2px solid var(--difficulty-color);
+  border: 2px solid var(--topic-color);
   background-color: white;
-  color: var(--difficulty-color);
+  color: var(--topic-color);
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.difficulty-btn:hover {
-  background-color: var(--difficulty-color);
+.topic-btn:hover {
+  background-color: var(--topic-color);
   color: white;
 }
 
-.difficulty-btn.active {
-  background-color: var(--difficulty-color);
+.topic-btn.active {
+  background-color: var(--topic-color);
   color: white;
 }
 
 @media (max-width: 480px) {
-  .difficulty-btn {
+  .topic-btn {
     width: 100%;
   }
 }
