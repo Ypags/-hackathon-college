@@ -1,16 +1,14 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import MathFormula from '../components/ui/MathFormula.vue'
-import Button from '../components/ui/Button.vue'
+import MathFormula from '../../components/ui/MathFormula.vue'
+import BackButton from '../../components/ui/BackButton.vue'
+import Button from '../../components/ui/Button.vue'
 import axios from 'axios'
 import html2pdf from 'html2pdf.js'
 
-const router = useRouter()
-
 const limits = ref(null)
-const loading = ref(false)
-const activeExampleId = ref(1)
+const loading = ref(true)
+const activeExampleId = ref(null)
 const pdfLoading = ref(false)
 
 const a = ref('a')
@@ -33,10 +31,11 @@ const toggleAnswer = () => {
 
 // Функция для получения данных с сервера
 const getLimit = async (exampleId) => {
-  loading.value = true
   activeExampleId.value = exampleId
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/exercise/${exampleId}`)
+    const response = await axios.get(
+      `https://hakaton-backend-tfz7.onrender.com/exercise/${exampleId}`,
+    )
     limits.value = response.data
 
     // Обновляем значения переменных из полученных данных
@@ -100,31 +99,29 @@ const examples = computed(() => [
   },
 ])
 
-const goBack = () => {
-  router.push('/')
-}
-
 onMounted(() => {
   getLimit(1)
 })
 </script>
 
 <template>
-  <div class="limits-container">
+  <div class="container">
     <div class="header-with-back">
-      <button class="back-btn" @click="goBack">
-        <span class="back-icon">←</span>
-        <span class="back-text">Назад</span>
-      </button>
+      <BackButton />
       <h1>Пределы</h1>
     </div>
 
     <section class="theory">
       <h2>Теория</h2>
       <p>
-        Предел функции — одно из основных понятий математического анализа. Предел функции f(x) при
-        x, стремящемся к a, — это число L, к которому значения функции f(x) становятся сколь угодно
-        близкими при достаточном приближении x к a.
+        Предел — одно из ключевых понятий математического анализа. Предел функции показывает, к
+        какому значению стремится функция, когда переменная x приближается к какому-то числу. Проще
+        говоря, если мы всё ближе и ближе подбираемся к какому-то x, то значения функции тоже всё
+        ближе подходят к какому-то числу — это и есть предел. Например, если подставлять в функцию
+        f(x) = x² числа, всё ближе к 2 (например, 1.9, 1.99, 1.999…), то значения f(x) будут
+        приближаться к 4. Значит, предел f(x) при x → 2 равен 4. Пределы помогают описывать
+        поведение функций в точках, где обычный счёт "не работает", например, при разрывах или в
+        бесконечности.
       </p>
     </section>
 
@@ -199,50 +196,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.limits-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fff;
-}
-
-.header-with-back {
-  display: flex;
-  align-items: center;
-  margin-bottom: 2rem;
-  position: relative;
-}
-
-.back-btn {
-  position: absolute;
-  left: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0.6rem 1.2rem;
-  background-color: #f8f9fa;
-  color: #6c757d;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-  background-color: #f1f3f5;
-  color: #495057;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-}
-
-.back-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
 .controls {
   margin-top: 1.5rem;
   display: flex;
@@ -271,13 +224,6 @@ onMounted(() => {
 .refresh-btn:disabled {
   background-color: #a8b1d5;
   cursor: not-allowed;
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  color: #6c757d;
-  font-style: italic;
 }
 
 .random-button-container {
@@ -350,19 +296,10 @@ h1 {
   width: 100%;
 }
 
-section {
-  margin-bottom: 2.5rem;
-}
-
 h2 {
   font-size: 1.5rem;
   color: #34495e;
   margin-bottom: 1.5rem;
-}
-
-.theory p {
-  line-height: 1.6;
-  color: #333;
 }
 
 .example-cards {
@@ -404,17 +341,5 @@ h2 {
   color: #2c3e50;
   font-size: 1.1rem;
   margin-right: 0.5rem;
-}
-
-@media (max-width: 768px) {
-  .header-with-back {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .back-btn {
-    position: static;
-    align-self: flex-start;
-  }
 }
 </style>

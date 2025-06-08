@@ -1,29 +1,46 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import SubjectCard from '../components/ui/SubjectCard.vue'
+import SubjectCard from '../components/SubjectCard.vue'
 import TopicButton from '../components/ui/TopicButton.vue'
 
 const router = useRouter()
-const activeSubject = ref('math')
-const activeTopic = ref('limits')
+const activeSubject = ref(null)
+const activeTopic = ref(null)
 
-const subjects = [
-  { id: 'math', name: 'Математика', icon: '✏️', active: true },
-  { id: 'physics', name: 'Физика', icon: '🔭', active: false },
-  { id: 'chemistry', name: 'Химия', icon: '🧪', active: false },
-  { id: 'biology', name: 'Биология', icon: '🧬', active: false },
-]
+const subjects = ref([
+  {
+    id: 'math',
+    name: 'Математика',
+    icon: '✏️',
+    topics: [
+      { id: 'limits', name: 'Пределы' },
+      { id: 'graphics', name: 'Графики функций' },
+      { id: 'probability', name: 'Теория вероятностей' },
+      { id: 'derivatives', name: 'Производные' },
+      { id: 'integrals', name: 'Интегралы' },
+      { id: 'matrices', name: 'Матрицы' },
+    ],
+  },
+  { id: 'physics', name: 'Физика', icon: '🔭', topics: [] },
+  { id: 'chemistry', name: 'Химия', icon: '🧪', topics: [] },
+  { id: 'biology', name: 'Биология', icon: '🧬', topics: [] },
+])
 
-const topics = [
-  { id: 'limits', name: 'Пределы', color: '#2ecc71' },
-  { id: 'derivatives', name: 'Производные', color: '#f39c12' },
-  { id: 'integrals', name: 'Интегралы', color: '#e74c3c' },
-  { id: 'matrices', name: 'Матрицы', color: '#9b59b6' },
-]
+const activeTopics = computed(() => {
+  if (!activeSubject.value) return []
+  const subject = subjects.value.find((s) => s.id === activeSubject.value)
+  return subject ? subject.topics : []
+})
 
 const selectSubject = (subjectId) => {
   activeSubject.value = subjectId
+  const subject = subjects.value.find((s) => s.id === subjectId)
+  if (subject && subject.topics.length > 0) {
+    activeTopic.value = subject.topics[0].id
+  } else {
+    activeTopic.value = null
+  }
 }
 
 const selectTopic = (topicId) => {
@@ -34,6 +51,10 @@ const startLearning = () => {
   if (activeSubject.value === 'math') {
     if (activeTopic.value === 'limits') {
       router.push('/limits')
+    } else if (activeTopic.value === 'graphics') {
+      router.push('/graphics')
+    } else if (activeTopic.value === 'probability') {
+      router.push('/probability')
     } else {
       alert('Эта тема пока находится в разработке!')
     }
@@ -44,7 +65,7 @@ const startLearning = () => {
 </script>
 
 <template>
-  <div class="home-container">
+  <div class="container">
     <header>
       <h1>Учись с удовольствием</h1>
       <p>Выбери дисциплину и тему, чтобы начать</p>
@@ -63,11 +84,11 @@ const startLearning = () => {
       </div>
     </section>
 
-    <section class="topic-selection">
+    <section v-if="activeSubject" class="topic-selection">
       <h2>Выберите тему</h2>
       <div class="topic-buttons">
         <TopicButton
-          v-for="topic in topics"
+          v-for="topic in activeTopics"
           :key="topic.id"
           :topic="topic"
           :isActive="activeTopic === topic.id"
@@ -76,18 +97,13 @@ const startLearning = () => {
       </div>
     </section>
 
-    <button class="start-btn" @click="startLearning">Начать обучение</button>
+    <button class="start-btn" :disabled="!activeTopic" @click="startLearning">
+      Начать обучение
+    </button>
   </div>
 </template>
 
 <style scoped>
-.home-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 header {
   text-align: center;
   margin-bottom: 3rem;
@@ -102,10 +118,6 @@ h1 {
 header p {
   font-size: 1.2rem;
   color: #7f8c8d;
-}
-
-section {
-  margin-bottom: 2.5rem;
 }
 
 h2 {
@@ -143,13 +155,20 @@ h2 {
   box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
 }
 
-.start-btn:hover {
-  background-color: #2980b9;
+.start-btn:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.start-btn:hover:not(:disabled) {
+  background-color: #1d78b5;
   transform: translateY(-3px);
   box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
 }
 
-.start-btn:active {
+.start-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
