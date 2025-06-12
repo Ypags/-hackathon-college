@@ -14,12 +14,7 @@ defineEmits(['select'])
 </script>
 
 <template>
-  <button
-    class="topic-btn"
-    :class="{ active: isActive }"
-    :style="{ '--topic-color': topic.color }"
-    @click="$emit('select', topic.id)"
-  >
+  <button class="topic-btn" :class="{ active: isActive }" @click="$emit('select', topic.id)">
     {{ topic.name }}
   </button>
 </template>
@@ -29,22 +24,24 @@ defineEmits(['select'])
   width: 9rem;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  border: 2px solid var(--topic-color);
+  border: 2px solid #cfcfcf;
   background-color: white;
-  color: var(--topic-color);
+  color: #555;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .topic-btn:hover {
-  background-color: var(--topic-color);
-  color: white;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .topic-btn.active {
-  background-color: var(--topic-color);
-  color: white;
+  border-color: #3498db;
+  background-color: #f7fbff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 480px) {
